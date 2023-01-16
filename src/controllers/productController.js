@@ -5,13 +5,13 @@ const shortid = require('shortid');
 module.exports.listProduct_post = (req, res) => {
   const { name, description, price, category, displayImage, seller } = req.body;
   const productId = shortid.generate();
-
+  console.log(displayImage);
   if (
     !name ||
     !description ||
     !price ||
     !category ||
-    !displayImage ||
+    displayImage.length == 0 ||
     !seller
   ) {
     return res.status(400).json({
@@ -148,7 +148,7 @@ module.exports.adminDeleteProduct_delete = (req, res) => {
         return res.json({
           status: 'success',
           data: {
-            deletedCount: res.deletedCount,
+            deletedCount: result.deletedCount,
             message: 'Product deleted successfully.',
           },
         });
@@ -337,11 +337,13 @@ module.exports.clientEditAndUpdateProduct_post = async (req, res) => {
 
 module.exports.adminEditAndUpdateProduct_post = (req, res) => {
   const { prodId } = req.params;
-  const { name, description, price, category, displayImage } = req.body;
+  const { name, description, price, category, displayImage, availability } =
+    req.body;
   const updates = {};
   if (name) updates.name = name;
   if (description) updates.description = description;
   if (category) updates.category = category;
+  if (availability) updates.availability = availability;
   if (price) {
     updates.originalPrice = price;
     updates.newPrice = price;

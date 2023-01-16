@@ -24,5 +24,15 @@ router.get(
   requireUserLogin,
   orderController.previousResellOrderUser_get
 );
+router.get(
+  '/admin/orders/all',
+  requireAdminLogin,
+  orderController.adminGetAllOrders_get
+);
+router.post(
+  '/admin/order/:orderId/cancel',
+  requireAdminLogin,
+  orderController.adminCancelledOrder_post
+);
 
 module.exports = router;

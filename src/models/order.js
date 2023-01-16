@@ -40,16 +40,8 @@ const orderSchema = new mongoose.Schema(
     orderStatus: {
       type: String,
       default: 'Placed',
-      validate: {
-        validator: function (value) {
-          return (
-            ['Placed', 'Shipped', 'Delivered', 'Cancelled By Admin'].indexOf(
-              value
-            ) !== -1
-          );
-        },
-        message: `{VALUE} is not a valid status. Status should be one of "Placed", "Shipped" or "Delivered"`,
-      },
+      enum: ['Placed', 'Shipped', 'Delivered', 'Cancelled By Admin'],
+      required: true,
     },
     paymentMode: {
       type: String,
@@ -59,6 +51,11 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: 'Pending',
       enum: ['Pending', 'Completed'],
+      required: true,
+    },
+    cancelled: {
+      type: Boolean,
+      default: false,
       required: true,
     },
   },

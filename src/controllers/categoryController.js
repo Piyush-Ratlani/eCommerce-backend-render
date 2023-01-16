@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 const Category = mongoose.model('Category');
 
 module.exports.addCategory_post = (req, res) => {
-  const { name, description } = req.body;
+  const { name, description, displayImage } = req.body;
 
-  if (!name) {
+  if (!name || !displayImage) {
     return res.status(400).json({
       status: 'error',
       error: {
         code: 400,
-        message: 'Add category name.',
+        message: 'Add category name and image.',
       },
     });
   } else {
@@ -26,11 +26,12 @@ module.exports.addCategory_post = (req, res) => {
         const category = new Category({
           name,
           description,
+          displayImage,
         });
         category
           .save()
           .then(savedCateg => {
-            const { name, description } = savedCateg;
+            const { name, description, displayImage } = savedCateg;
 
             return res.json({
               status: 'success',
@@ -38,6 +39,7 @@ module.exports.addCategory_post = (req, res) => {
                 category: {
                   name,
                   description,
+                  displayImage,
                 },
               },
             });

@@ -43,7 +43,12 @@ const userSchema = new mongoose.Schema({
   },
   shippingAddress: [
     {
-      type: String,
+      address: {
+        type: String,
+      },
+      pincode: {
+        type: Number,
+      },
     },
   ],
   eComm_wallet: {

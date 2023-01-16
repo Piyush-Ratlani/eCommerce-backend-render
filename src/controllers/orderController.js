@@ -52,7 +52,7 @@ module.exports.placeOrder_post = (req, res) => {
           .populate('buyer', '_id displayName displayImage email accountType')
           .populate(
             'cart.product',
-            '_id name description newPrice seller dispayImage sellerType category'
+            '_id name description newPrice seller displayImage sellerType category'
           )
           .then(popOrder => {
             return res.json({
@@ -96,7 +96,7 @@ module.exports.updateOrderStatusAndPayment_post = (req, res) => {
     .populate('buyer', '_id displayName displayImage email accountType')
     .populate(
       'cart.product',
-      '_id name description newPrice originalPrice seller dispayImage sellerType category'
+      '_id name description newPrice originalPrice seller displayImage sellerType category'
     )
     .then(async updatedOrder => {
       let walletUpdateData = [];
@@ -184,7 +184,7 @@ module.exports.previousOrderUser_get = (req, res) => {
     .populate('buyer', '_id displayName displayImage email accountType')
     .populate(
       'cart.product',
-      '_id name description newPrice seller dispayImage sellerType category'
+      '_id name description newPrice seller displayImage sellerType category'
     )
     .then(list => {
       return res.json({
@@ -271,10 +271,86 @@ module.exports.previousResellOrderUser_get = (req, res) => {
   ])
     .then(orders => {
       // orders will contain the orders with products whose seller match the given user id
-      res.json({ orders });
+      let totalMargin = 0;
+      orders.map(item => {
+        totalMargin += item.margin;
+      });
+      res.json({
+        status: 'success',
+        data: {
+          orders,
+          totalMargin,
+        },
+      });
       console.log(orders);
     })
     .catch(error => {
       console.log(error);
+      return res.status(500).json({
+        status: 'error',
+        error: {
+          code: 500,
+          message: 'Internal server error.',
+        },
+      });
+    });
+};
+
+module.exports.adminGetAllOrders_get = (req, res) => {
+  Order.find()
+    .sort('-createdAt')
+    .populate('buyer', '_id displayName displayImage email accountType')
+    .populate(
+      'cart.product',
+      '_id name description newPrice seller displayImage sellerType productId category'
+    )
+    .then(list => {
+      return res.json({
+        status: 'success',
+        data: {
+          orders: list,
+        },
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).json({
+        status: 'error',
+        error: {
+          code: 500,
+          message: 'Internal server error.',
+        },
+      });
+    });
+};
+
+module.exports.adminCancelledOrder_post = (req, res) => {
+  const { orderId } = req.params;
+  const { cancelled, orderStatus } = req.body;
+
+  Order.findByIdAndUpdate(orderId, { cancelled, orderStatus }, { new: true })
+    .populate('buyer', '_id displayName displayImage email accountType')
+    .populate(
+      'cart.product',
+      '_id name description newPrice originalPrice seller displayImage sellerType category'
+    )
+    .then(updatedOrder => {
+      return res.json({
+        status: 'success',
+        data: {
+          order: updatedOrder,
+        },
+        message: 'Order status updated.',
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.status(500).json({
+        status: 'error',
+        error: {
+          code: 500,
+          message: 'Internal server error',
+        },
+      });
     });
 };

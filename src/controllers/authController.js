@@ -115,7 +115,15 @@ module.exports.userSignin_post = (req, res) => {
             },
           });
         } else {
-          const { _id, displayName, displayImage, email } = savedUser;
+          const {
+            _id,
+            displayName,
+            displayImage,
+            email,
+            eComm_wallet,
+            shippingAddress,
+            accountType,
+          } = savedUser;
           const token = jwt.sign({ _id }, JWT_SECRET_user);
           return res.json({
             status: 'success',
@@ -126,6 +134,9 @@ module.exports.userSignin_post = (req, res) => {
                 displayImage,
                 email,
                 token,
+                eComm_wallet,
+                shippingAddress,
+                accountType,
               },
             },
             message: 'Sign in success.',
