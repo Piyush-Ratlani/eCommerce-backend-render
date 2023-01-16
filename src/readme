@@ -1,0 +1,10 @@
+:accountType = 'client' || 'admin'
+
+Add Products:
+
+1. Only admin can add product.
+2. Users can change only price and place product for resell.
+
+For order updates:
+
+1. When the "orderStatus" = "Delivered" and "paymentStatus" = "Completed", "eComm_wallet" of the sellers, for the products in that order will be updated.
