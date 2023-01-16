@@ -13,6 +13,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const userRoutes = require('./routes/userRoutes');
 const mongoString = process.env.DATABASE_URL;
 const PORT = process.env.PORT;
+const cors = require('cors');
 
 mongoose.connect(mongoString);
 const database = mongoose.connection;
@@ -27,6 +28,11 @@ app.listen(PORT, () => {
   console.log(`Listening on PORT:${PORT}`);
 });
 
+app.use(
+  cors({
+    origin: '*',
+  })
+);
 app.use(authRoutes);
 app.use(categoryRoutes);
 app.use(productRoutes);
