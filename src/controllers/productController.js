@@ -63,7 +63,7 @@ module.exports.listProduct_post = (req, res) => {
 };
 
 module.exports.allProducts_get = (req, res) => {
-  Product.find()
+  Product.find({ sellerType: 'admin' })
     .sort('-createdAt')
     .populate('category', '_id name')
     .populate('seller', '_id displayName email displayImage accountType')
