@@ -307,7 +307,7 @@ module.exports.adminGetAllOrders_get = (req, res) => {
     .populate({
       path: 'cart.product',
       select:
-        '_id name description newPrice seller displayImage sellerType productId category',
+        '_id name description newPrice originalPrice seller displayImage sellerType productId category',
       populate: {
         path: 'seller',
         select: '_id displayName displayImage email accountType',
