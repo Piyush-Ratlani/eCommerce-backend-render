@@ -300,10 +300,19 @@ module.exports.adminGetAllOrders_get = (req, res) => {
   Order.find()
     .sort('-createdAt')
     .populate('buyer', '_id displayName displayImage email accountType')
-    .populate(
-      'cart.product',
-      '_id name description newPrice originalPrice seller displayImage sellerType productId category'
-    )
+    // .populate(
+    //   'cart.product',
+    //   '_id name description newPrice originalPrice seller displayImage sellerType productId category'
+    // )
+    .populate({
+      path: 'cart.product',
+      select:
+        '_id name description newPrice seller displayImage sellerType productId category',
+      populate: {
+        path: 'seller',
+        select: '_id displayName displayImage email accountType',
+      },
+    })
     .then(list => {
       return res.json({
         status: 'success',
