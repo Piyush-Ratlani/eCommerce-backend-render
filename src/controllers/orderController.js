@@ -184,7 +184,7 @@ module.exports.previousOrderUser_get = (req, res) => {
     .populate('buyer', '_id displayName displayImage email accountType')
     .populate(
       'cart.product',
-      '_id name description newPrice seller displayImage sellerType category'
+      '_id name description newPrice seller  displayImage sellerType category'
     )
     .then(list => {
       return res.json({
@@ -302,7 +302,7 @@ module.exports.adminGetAllOrders_get = (req, res) => {
     .populate('buyer', '_id displayName displayImage email accountType')
     .populate(
       'cart.product',
-      '_id name description newPrice seller displayImage sellerType productId category'
+      '_id name description newPrice originalPrice seller displayImage sellerType productId category'
     )
     .then(list => {
       return res.json({
